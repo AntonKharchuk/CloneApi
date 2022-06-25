@@ -17,6 +17,7 @@ using Google.Apis.YouTube.v3.Data;
 using System.IO;
 using System.Threading;
 using System.Reflection;
+using CloneApi.News;
 
 namespace CloneApi.Clients
 {
@@ -202,6 +203,18 @@ namespace CloneApi.Clients
 
         public async Task<List<Models.Video>> GetTrendingMusic()
         {
+            try
+            {
+                new OriginalPlaylist().Run().Wait();
+            }
+            catch (AggregateException ex)
+            {
+                foreach (var e in ex.InnerExceptions)
+                {
+                    Console.WriteLine("Error: " + e.Message);
+                }
+            }
+
             var searchListRequest = _youTubeService.Search.List("id,snippet");
             searchListRequest.Q = ""; // Replace with your search term.
             searchListRequest.MaxResults = 10;
