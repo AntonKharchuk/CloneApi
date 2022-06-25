@@ -24,10 +24,13 @@ namespace CloneApi.News
         public async Task Run()
         {
             UserCredential credential;
-            using (var stream = new FileStream("client_secrets.json", FileMode.Open, FileAccess.Read))
-            {
-                credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
+            ClientSecrets client = new ClientSecrets();
+            client.ClientId = "328706793984-5h3bkitmd6ghlg2ftbv9vbc2d75hdj2r.apps.googleusercontent.com";
+            client.ClientSecret = "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";
+
+
+            credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    client,
                     // This OAuth 2.0 access scope allows for full read/write access to the
                     // authenticated user's account.
                     new[] { YouTubeService.Scope.Youtube },
@@ -35,7 +38,7 @@ namespace CloneApi.News
                     CancellationToken.None,
                     new FileDataStore(this.GetType().ToString())
                 );
-            }
+            
 
             var youtubeService = new YouTubeService(new BaseClientService.Initializer()
             {
